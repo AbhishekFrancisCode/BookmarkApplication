@@ -31,6 +31,23 @@ CREATE TABLE "formdata" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "company_name" TEXT NOT NULL,
     "contact_name" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
+    "pincde" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "contact_number" TEXT NOT NULL,
+    "customer_group" TEXT[],
+    "project_cap" TEXT NOT NULL,
+    "project_size" TEXT NOT NULL,
+    "isStudio" BOOLEAN NOT NULL DEFAULT false,
+    "team_cap" TEXT NOT NULL,
+    "experience" TEXT NOT NULL,
+    "project_cites" TEXT NOT NULL,
+    "experience_des" TEXT NOT NULL,
+    "key_problems" TEXT NOT NULL,
+    "services_finemake" TEXT[],
+    "invite_from" TEXT NOT NULL,
 
     CONSTRAINT "formdata_pkey" PRIMARY KEY ("id")
 );

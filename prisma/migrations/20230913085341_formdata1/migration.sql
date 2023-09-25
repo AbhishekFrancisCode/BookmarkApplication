@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "formdata" ALTER COLUMN "isStudio" DROP DEFAULT,
+ALTER COLUMN "isStudio" SET DATA TYPE TEXT;

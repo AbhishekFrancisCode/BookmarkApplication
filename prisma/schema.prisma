@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//for internal use
 model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -26,6 +27,7 @@ model User {
   @@map("users")
 }
 
+//for internal use
 model Bookmark {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -41,6 +43,7 @@ model Bookmark {
   @@map("bookmarks")
 }
 
+//schema for partner registration form page...........................................
 model Formdata {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -49,5 +52,257 @@ model Formdata {
   company_name String
   contact_name String
 
+  address String
+  city String
+  state String
+  pincde String
+  email String
+  contact_number String
+  customer_group String[]
+  project_cap String
+  project_size String
+  isStudio String
+  team_cap String
+  experience String
+  project_cites String
+  experience_des String
+  key_problems String
+  services_finemake String[]
+  invite_from String
+
   @@map("formdata")
 }
+
+//schema for product page...........................................
+enum GlobalType {
+  KITCHEN_STRUCTURE
+  WARDROBE_STRUCTURE
+  FINISH_STRUCTURE
+}
+
+enum Applications {
+  KITCHEN
+  WARDROBE_7FT
+  WARDROBE_9FT
+}
+
+enum TextureType {
+  Texture
+  SubTexture
+}
+
+//creating the finemake products with uid, title
+model FinemakeProducts {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title String
+  global_type GlobalType //KITCHEN_STRUCTURE, WARDROBE_STRUCTURE, FINISH_STRUCTURE
+  name String     //KITCHEN_STRUCTURE, WARDROBE_STRUCTURE, FINISH_STRUCTURE
+  is_active Boolean
+
+  @@map("finemakeproducts")
+}
+
+// model Kitchen {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@map("kitchen")
+// }
+// model Wardrope {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@map("wardrope")
+// }
+
+model Units {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  global_type String[] //Globaltypes
+  name String    // Base init, Tall unit
+  images String       
+  meta Json?
+  modules Modules[]
+  
+  @@map("unit")
+}
+
+model Modules {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  unit_type_id String  // fetch data from unit table 
+  unit_type String     // fetch data from unit table
+  name String
+  item_code String
+  price String
+  price_key String
+  module_type String //eg. Two_drawer, 
+  description String?
+  height_range String
+  width_range String
+  depth_range String
+  hardware String[]      
+  handles String[]      //not sure
+  legs Int?
+  skirting Json?
+  images String
+  thumbnail String
+  bottom_panel_exposed	String?
+  exposed	String
+  carcass_material String[]
+  shutter_material String[]
+  hardware_material	String[]
+
+  unit Units @relation(fields: [unit_type_id], references: [id])
+
+  @@map("modules")
+}
+
+
+model Finish {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  name String
+  value String
+  global_type String @default("FINISH_STRUCTURE")
+  finish_type FinemakeBrand[]
+  is_active Boolean
+
+   @@map("finish")
+}
+
+model FinemakeBrand {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  finish_type Finish @relation(fields: [finish_id], references: [id])
+  finish_id String @unique
+  name String
+  item_code String
+  value String
+  is_active Boolean
+  shades Shades[]
+  @@map("finishtype")
+}
+
+//finish info 
+model Shades {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String//default name
+  code String     //default code
+  fm_name String  //finemake finish name
+  fm_code String  //finemake unique finish code
+  subtitle String?
+  texture String  // Texture table
+  sub_texture String 
+  // catalouge_id  
+  image Json[]
+  // brand String
+  meta Json[]
+  applications Applications[] 
+  descirption String?
+  is_active Boolean
+  images_kitchen Json?
+  images_wardrobe Json?
+  price Int
+  size String
+    
+  finish_type FinemakeBrand @relation(fields: [finish_type_id], references: [id])
+  finish_type_id String
+  @@map("shades")
+}
+
+model Texture {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  item_code String
+  type TextureType 
+
+  @@map("texture")
+}
+
+model Vendor {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  item_code String
+  brand Brand[]
+}
+model Brand {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  item_code String
+  vendor_id String
+  catalouge Catalouge[]
+
+  vendor Vendor @relation(fields: [vendor_id], references: [id])
+
+}
+
+model Catalouge {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  item_code String
+  brand_id String
+
+  catalouge Brand @relation(fields: [brand_id], references: [id])
+}
+
+model Edgeband {
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  item_code String
+  thickness String
+}
+// model Category_products {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   name String
+//   avtive Boolean
+//   product_Id Int
+//   // products   Products @relation(fields: [product_Id], references: [id])
+//   @@map("category_products")
+// }
+// model Category_shades {
+//   id        String @id @db.Uuid()
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   shade_id String
+//   shade  Shades @relation(fields: [shade_id], references: [id])
+//   name String
+//   is_active Boolean
+
+ 
+  
+//   @@map("category_shades")
+// }
