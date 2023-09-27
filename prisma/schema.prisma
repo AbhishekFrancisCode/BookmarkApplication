@@ -78,6 +78,7 @@ enum GlobalType {
   KITCHEN_STRUCTURE
   WARDROBE_STRUCTURE
   FINISH_STRUCTURE
+
 }
 
 enum Applications {
@@ -149,13 +150,14 @@ model Modules {
   height_range String
   width_range String
   depth_range String
-  hardware String[]      
+  hardware String[]    
+  accessories String[]  
   handles String[]      //not sure
   legs Int?
   skirting Json?
   images String
   thumbnail String
-  bottom_panel_exposed	String?
+  bottom_panel_exposed	Boolean?
   exposed	String
   carcass_material String[]
   shutter_material String[]
@@ -213,7 +215,7 @@ model Shades {
   image Json[]
   // brand String
   meta Json[]
-  applications Applications[] 
+  applications Applications[] //Kitchen , Wardrobe, Wardrobe-7ft, Wardrobe-9ft
   descirption String?
   is_active Boolean
   images_kitchen Json?
@@ -257,7 +259,7 @@ model Brand {
   vendor_id String
   catalouge Catalouge[]
 
-  vendor Vendor @relation(fields: [vendor_id], references: [id])
+  vendor Vendor @relation(fields: [vendor_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
 }
 
@@ -270,7 +272,7 @@ model Catalouge {
   item_code String
   brand_id String
 
-  catalouge Brand @relation(fields: [brand_id], references: [id])
+  catalouge Brand @relation(fields: [brand_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Edgeband {
@@ -282,27 +284,21 @@ model Edgeband {
   item_code String
   thickness String
 }
-// model Category_products {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   name String
-//   avtive Boolean
-//   product_Id Int
-//   // products   Products @relation(fields: [product_Id], references: [id])
-//   @@map("category_products")
-// }
-// model Category_shades {
-//   id        String @id @db.Uuid()
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
 
-//   shade_id String
-//   shade  Shades @relation(fields: [shade_id], references: [id])
-//   name String
-//   is_active Boolean
+enum MaterialType {
+  CARCASS_MATERIAL
+  SHUTTER_MATERIAL
+  HARDWARE_MATERIAL
 
- 
-  
-//   @@map("category_shades")
-// }
+}
+model Materials{
+  id        String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  value String?
+  item_code String
+  material_type MaterialType
+  mata Json[]
+}
