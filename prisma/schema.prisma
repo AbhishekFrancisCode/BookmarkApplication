@@ -211,7 +211,6 @@ model Shades {
   subtitle String?
   texture String  // Texture table
   sub_texture String 
-  // catalouge_id  
   image Json[]
   // brand String
   meta Json[]
@@ -247,7 +246,7 @@ model Vendor {
 
   name String
   item_code String
-  brand Brand[]
+  catalouge Catalouge[]
 }
 model Brand {
   id        String @id @db.Uuid()
@@ -259,7 +258,7 @@ model Brand {
   vendor_id String
   catalouge Catalouge[]
 
-  vendor Vendor @relation(fields: [vendor_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  
 
 }
 
@@ -271,7 +270,9 @@ model Catalouge {
   name String
   item_code String
   brand_id String
-
+  vendor_id String
+  
+  vendor Vendor @relation(fields: [vendor_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   catalouge Brand @relation(fields: [brand_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
