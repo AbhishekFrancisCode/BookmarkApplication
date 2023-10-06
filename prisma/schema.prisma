@@ -124,20 +124,21 @@ model Units {
   id        String @id @db.Uuid()
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  is_active Boolean
   
   global_type String[] //Globaltypes
   name String    // Base init, Tall unit
   images String       
   meta Json?
-  modules Modules[]
-  
+  kitchen_modules KitchenModules[]
   @@map("unit")
 }
 
-model Modules {
+model KitchenModules {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  is_active Boolean
 
   unit_type_id String  // fetch data from unit table 
   unit_type String     // fetch data from unit table
@@ -165,8 +166,84 @@ model Modules {
 
   unit Units @relation(fields: [unit_type_id], references: [id])
 
-  @@map("modules")
+  @@map("kitchen_modules")
 }
+
+model WardrobeTypes {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  is_active Boolean
+
+  name String
+  item_code String
+  module_type String? //eg. Two_drawer, 
+  range String
+  description String?  
+  images String
+  thumbnail String?
+
+  @@map("wardrobetype_modules")
+}
+
+model WardrobeInternalModule { 
+  id String @id @db.Uuid()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  is_active Boolean
+
+  name String
+  item_code String
+  price String
+  price_key String
+  module_type String //eg. Two_drawer, 
+  description String?
+  height_range String
+  width_range String
+  depth_range String
+  hardware String[]    
+  accessories String[]  
+  handles String[]      //not sure
+  images String?
+  thumbnail String?
+  bottom_panel_exposed	Boolean?
+  exposed	String
+  carcass_material String[]
+  shutter_material String[]
+  hardware_material	String[]
+  
+  @@map("wardrobeinternals")
+  }
+
+// model WardrobeInternalModule{
+//   id        Int      @id @db.Uuid()
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   name String
+//   item_code String
+//   price String
+//   price_key String
+//   module_type String //eg. Two_drawer, 
+//   description String?
+//   height_range String
+//   width_range String
+//   depth_range String
+//   hardware String[]    
+//   accessories String[]  
+//   handles String[]      //not sure
+//   legs Int?
+//   skirting Json?
+//   images String
+//   thumbnail String
+//   bottom_panel_exposed	Boolean?
+//   exposed	String
+//   carcass_material String[]
+//   shutter_material String[]
+//   hardware_material	String[]
+
+//   @@map("wardrobeinternalmodule")I
+// }
 
 
 model Finish {
